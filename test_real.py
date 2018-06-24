@@ -51,8 +51,8 @@ with tf.Graph().as_default():
                     bb[i][3] = det[i][3]
                     cv2.rectangle(frame,(bb[i][0],bb[i][1]),(bb[i][2],bb[i][3]),(255,255,255)) #draw bounding box for the face
             
-                    cropped1.append(frame[bb[i][1]:bb[i][3], bb[i][0]:bb[i][2], :])
-                    cropped[i] = facenet.flip(cropped1[i], False)
+                    cropped.append(frame[bb[i][1]:bb[i][3], bb[i][0]:bb[i][2], :])
+                    cropped[i] = facenet.flip(cropped[i], False)
                     scaled.append(misc.imresize(cropped[i], (image_size, image_size), interp='bilinear'))
                     scaled[i] = cv2.resize(scaled[i], (image_size,image_size),interpolation=cv2.INTER_CUBIC)
                     scaled[i] = facenet.prewhiten(scaled[i])
@@ -66,8 +66,8 @@ with tf.Graph().as_default():
                     for i in range(len(best_class_indices)):
                         print('%4d  %s: %.3f' % (i, class_names[best_class_indices[i]], best_class_probabilities[i]))
                     
-                    cv2.putText(cropped[i],class_names[best_class_indices[i]],(bb[i][0],bb[i][1]),font,4,(255,255,255),2,cv2.LINE_AA) 
-                    cv2.imshow(str(i),cropped[i])   
+                    cv2.putText(frame,class_names[best_class_indices[i]],(bb[i][0],bb[i][1]),font,4,(255,255,255),2,cv2.LINE_AA) 
+                    cv2.imshow(str(i),frame)   
                     key = cv2.waitKey(1) & 0xFF
                     if key == ord("q"):
                         break

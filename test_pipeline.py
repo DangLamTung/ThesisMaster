@@ -29,7 +29,8 @@ with tf.Graph().as_default():
         phase_train_placeholder = tf.get_default_graph().get_tensor_by_name("phase_train:0")
         embedding_size = embeddings.get_shape()[1]
         emb_array = np.zeros((1, embedding_size))
-        (model, class_names) = pickle.load(open('students_classifier.pkl', 'rb'))
+        (model, class_names) = pickle.load(open('svm_classifier.pkl', 'rb'))
+        print(len(class_names))
         hn = cv2.VideoCapture(0)
         while True:
             _,frame = hn.read();

@@ -60,7 +60,7 @@ def main(args):
             data['person'] = []   
             file = open('class.txt','w')  
             for i in range(len(class_names)):
-                file.write(class_names[i]) 
+                file.write(class_names[i] + os.linesep)
             file.close()
             for i in range(len(emb_array)):
                 data['person'].append({'name':labels[i],'emb':emb_array[i].tolist()})

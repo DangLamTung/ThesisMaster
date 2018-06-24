@@ -11,8 +11,8 @@ import pickle
 
 labels = []
 embs = []
-file = open('class.txt','r')  
-class_names = file.read()
+file = open('class.txt','r')
+class_names = file.readlines()
 file.close()
 print(class_names)
 with open('data.txt') as json_file:  
@@ -23,7 +23,7 @@ with open('data.txt') as json_file:
 embs = np.array(embs)
 labels = np.array(labels)
 X_train, X_test, y_train, y_test = train_test_split(embs, labels, test_size=0.33, random_state=42)
-print('Training classifier')
+print('Training SVM classifier')
 model = SVC(kernel='linear', probability=True)
 model.fit(X_train, y_train)
 
@@ -32,10 +32,11 @@ best_class_indices = np.argmax(predictions, axis=1)
 best_class_probabilities = predictions[np.arange(len(best_class_indices)), best_class_indices]
 print(best_class_probabilities)
 accuracy = np.mean(np.equal(best_class_indices, y_test))
+print('Accuracy: %.3f' % accuracy)
 with open('svm_classifier.pkl', 'wb') as outfile:
     pickle.dump((model, class_names), outfile)
 
-print('Accuracy: %.3f' % accuracy)
+
 
 from sklearn.neighbors import KNeighborsClassifier
 neigh = KNeighborsClassifier(n_neighbors = 4)
