@@ -11,9 +11,12 @@ import pickle
 
 labels = []
 embs = []
-file = open('class.txt','r')
-class_names = file.readlines()
+class_names = []
+with open('class.txt') as file:
+    for l in file.readlines():
+        class_names.append(l.replace('\n', ''))
 file.close()
+
 print(class_names)
 with open('data.txt') as json_file:  
     data = json.load(json_file)
@@ -22,6 +25,7 @@ with open('data.txt') as json_file:
         labels.append(p['name'])
 embs = np.array(embs)
 labels = np.array(labels)
+print(labels)
 X_train, X_test, y_train, y_test = train_test_split(embs, labels, test_size=0.33, random_state=42)
 print('Training SVM classifier')
 model = SVC(kernel='linear', probability=True)
@@ -63,7 +67,7 @@ plt.scatter(X_embedded[:, 0], X_embedded[:, 1],
 plt.show()
 pca = PCA(n_components=2)
 pca.fit(embs)
-embs = pca.transform(embs)
+embs = pca.transform(embs[1:100])
 plt.scatter(embs[:, 0], embs[:, 1],
-        c=labels, marker="x")
+        c=labels[1:100], marker="x")
 plt.show()

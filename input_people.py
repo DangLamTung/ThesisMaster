@@ -5,17 +5,22 @@ import os
 import tensorflow as tf
 import mtcnn_detect
 import facenet
+import json
 import cv2
 import numpy as np
+import PIL.Image, PIL.ImageTk
 from scipy import misc
 from random import randint
 import math
+import pickle
+from sklearn.svm import SVC
+from sklearn.model_selection import train_test_split
 parser = argparse.ArgumentParser()
 parser.add_argument("name", help = "name of person need to add")
 args = parser.parse_args()
 
 embedding_size = 128
-directory = "./data/"+args.name+'/'
+directory = "./dataImg/"+args.name+'/'
 model_path = './models/20170512-110547.pb'
 
 im_arr = []
@@ -34,15 +39,42 @@ def get_image(event,x,y,flags,param):
     if event == cv2.EVENT_LBUTTONDBLCLK:
         im_arr.append(img)
         print('Image taken')
-            
+def getimage(frame):
+    im_arr.append(frame)
+    print('Image taken')
+labels = []
+embs = []
+class_names = []
+with open('class.txt') as file:
+    for l in file.readlines():
+        class_names.append(l.replace('\n', ''))
+file.close()
+
+print(class_names)
+with open('data.txt') as json_file:  
+    data = json.load(json_file)
+    for p in data['person']:
+        embs.append(p['emb'])
+        labels.append(p['name'])
+
+if args.name in class_names:
+    person_label = class_names.index(args.name)
+    print('This person is already in database')
+else:
+    person_label = len(class_names) 
+    file = open('class.txt','w')  
+    class_names.append(args.name)
+    for name in class_names:
+        file.write(name + os.linesep)
+    file.close()                 
         
    
 # Create a black image, a window and bind the function to window
 img = np.zeros((512,512,3), np.uint8)
 cv2.namedWindow('image')
 cv2.setMouseCallback('image',get_image)
-cap = cv2.VideoCapture(0)
 
+cap = cv2.VideoCapture(0)
 while(1):
     ret, img = cap.read()
     cv2.imshow('image',img)
@@ -105,7 +137,7 @@ for i in range(len(im_arr)):
             cropped_im.append(cropped)
 for i in range(len(save_im)):
     cv2.imwrite(directory+str(i)+'.jpg',save_im[i])
-print('Extracted: ' % len(cropped_im))
+print('Extracted: %d' % len(cropped_im))
 cropped_im = np.array(cropped_im)
 cropped_im.reshape(-1,image_size,image_size,3)
 
@@ -123,5 +155,25 @@ with tf.Graph().as_default():
         
         feed_dict = { images_placeholder:cropped_im, phase_train_placeholder:False }
         emb_array = sess.run(embeddings, feed_dict=feed_dict)
-        print(emb_array)
+        for i in range(len(emb_array)):
+            data['person'].append({'name':person_label,'emb':emb_array[i].tolist()})
+            labels.append(person_label)
+            embs.append(emb_array[i])
+        with open('data.txt', 'w') as outfile:
+            json.dump(data, outfile)
+        print(len(embs))
+        print(len(labels))
+        X_train, X_test, y_train, y_test = train_test_split(np.array(embs),np.array(labels), test_size=0.33, random_state=42)
+        print('Training SVM classifier')
+        model = SVC(kernel='linear', probability=True)
+        model.fit(X_train, y_train)
+        predictions = model.predict_proba(X_test)
+        best_class_indices = np.argmax(predictions, axis=1)
+        best_class_probabilities = predictions[np.arange(len(best_class_indices)), best_class_indices]
+        accuracy = np.mean(np.equal(best_class_indices, y_test))
+        print('Accuracy: %.3f' % accuracy)
+        with open('svm_classifier.pkl', 'wb') as outfile:
+            pickle.dump((model, class_names), outfile)
+        print('Saved svm classifier')
+
           
