@@ -3,6 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 import tensorflow as tf
+
 import numpy as np
 import argparse
 import facenet
@@ -58,7 +59,7 @@ def main(args):
             class_names = [ cls.name.replace('_', ' ') for cls in dataset]
             data = {}
             data['person'] = []   
-            file = open('class.txt','w')  
+            file = open(args.class_out,'w')  
             for i in range(len(class_names)):
                 file.write(class_names[i] + os.linesep)
             file.close()
@@ -66,7 +67,7 @@ def main(args):
                 data['person'].append({'name':labels[i],'emb':emb_array[i].tolist()})
                 
             print(data)
-            with open('data.txt', 'w') as outfile:
+            with open(args.data_out, 'w') as outfile:
                 json.dump(data, outfile)
 def parse_arguments(argv):
     parser = argparse.ArgumentParser()
@@ -75,7 +76,11 @@ def parse_arguments(argv):
         help='Path to the data directory containing aligned LFW face patches.',default='./data/data')
     parser.add_argument('model', type=str, 
         help='Could be either a directory containing the meta_file and ckpt_file or a model protobuf (.pb) file',
-        default = './models/20180408-102900.pb')
+        default = './facenet.pb')
+    parser.add_argument('data_out', type=str,
+        help='Path to the json save file.',default='./data.txt')
+    parser.add_argument('class_out', type=str,
+        help='Path to the class save file.',default='./class.txt')
     parser.add_argument('--image_size', type=int,
         help='Image size (height, width) in pixels.', default=160)
     parser.add_argument('--batch_size', type=int,

@@ -110,7 +110,7 @@ pnet, rnet, onet = mtcnn_detect.create_mtcnn(sess, 'models')
 cropped_im = []
 save_im = []
 for i in range(len(im_arr)):
-    frame = im_arr[i];
+    frame = im_arr[i]
     bounding_boxes, _ = mtcnn_detect.detect_face(frame, minsize, pnet, rnet, onet, threshold, factor)
     nrof_faces = bounding_boxes.shape[0]
     if nrof_faces == 1:

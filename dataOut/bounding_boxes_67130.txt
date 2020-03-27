@@ -1,0 +1,20 @@
+./dataOut/lecun/images.png 52 35 184 188
+./dataOut/lecun/images (3).png 147 14 231 105
+./dataOut/lecun/images (2).png 54 21 187 181
+./dataOut/lecun/images (1).png 59 25 173 154
+./dataOut/lecun/download (3).png 33 40 173 202
+./dataOut/lecun/q6mwUj-7_400x400.png 32 39 147 171
+./dataOut/obama/download (1).png 68 8 198 165
+./dataOut/obama/download (2).png 78 16 169 120
+./dataOut/obama/200919obama2_xblk.png
+./dataOut/obama/download.png 68 3 209 165
+./dataOut/obama/overview-Barack-Obama.png 335 14 619 356
+./dataOut/trump/donald-trump-1-e1577049942608 (1).png 299 61 681 539
+./dataOut/trump/ong-trump-158276851863359458166.png 209 72 365 259
+./dataOut/trump/104466932-PE_Color.530x298.png 181 21 358 238
+./dataOut/trump/donald-trump-1-e1577049942608.png 299 61 681 539
+./dataOut/trump/images.png 88 3 195 124
+./dataOut/trump/original.png
+./dataOut/trump/download.png 86 0 182 107
+./dataOut/trump/7_zpoc.png 336 56 499 254
+./dataOut/trump/_108890344_mediaitem108890343.png 100 0 279 214

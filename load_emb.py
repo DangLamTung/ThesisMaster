@@ -26,6 +26,11 @@ with open('data.txt') as json_file:
 embs = np.array(embs)
 labels = np.array(labels)
 print(labels)
+
+
+# classes_list = class_names.tolist()
+# data_list = data.tolist()
+
 X_train, X_test, y_train, y_test = train_test_split(embs, labels, test_size=0.33, random_state=42)
 print('Training SVM classifier')
 model = SVC(kernel='linear', probability=True)
